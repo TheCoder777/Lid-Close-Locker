@@ -1,14 +1,19 @@
 #!/bin/bash
 
 get_state() {
-    #echo $(awk -F':' '{ print $2 }' /proc/acpi/button/lid/LID/state)
-    echo $(cat /home/nova/.lid_status)
+    state=$(awk -F':' '{ print $2 }' /proc/acpi/button/lid/LID/state)
+    if [[ $state == *"close"* ]]; then
+        echo 0
+    elif [[ $state == *"open"* ]]; then
+        echo 1
+    fi
+    
 }
 
 while true
 do
     state="$(get_state)"
-    echo $state
+    #echo $state
 
     if [[ $state -eq 0 ]]; then
         echo "Executing physlock..."
